@@ -1,5 +1,6 @@
 import dataclasses
 import inspect
+from api.models.base import BaseDataClass
 
 
 class SourceDefinitionFactory:
@@ -14,16 +15,6 @@ class SourceDefinitionFactory:
         if not source_definition:
             raise ValueError(source_type)
         return source_definition
-
-
-@dataclasses.dataclass
-class BaseDataClass:
-    @classmethod
-    def from_dict(cls, env):
-        params = {
-            k: v for k, v in env.items() if k in inspect.signature(cls).parameters
-        }
-        return cls(**params)
 
 
 @dataclasses.dataclass

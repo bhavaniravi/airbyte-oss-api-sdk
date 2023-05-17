@@ -30,7 +30,8 @@ def test_create_source(connection):
     response = hook.create_source(
         source_name="new_pg",
         workspace_id=workspace_id,
-        source_definition_id="decd338e-5647-4c0b-adf4-da0e75f5a750",
+        source_definition_id=source_definition_id,
+        # need all these parameters for postgres API to work
         params={
             "host": "localhost",
             "port": 5432,

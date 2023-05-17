@@ -158,9 +158,9 @@ class HttpHook:
         try:
             response.raise_for_status()
         except requests.exceptions.HTTPError:
-            # logging.error("HTTP error: %s", response.reason)
-            logging.error(response.json())
-            # raise Exception(str(response.status_code) + ":" + response.reason)
+            logging.error("HTTP error: %s", response.reason)
+            logging.error(response.text)
+            raise Exception(str(response.status_code) + ":" + response.reason)
 
     def run_and_check(
         self,

@@ -5,13 +5,13 @@ import dataclasses
 
 
 class SourceDefinitionAPI(AirbyteHook):
-    def get_source_definition(self, source_definition_id):
-        return self.run(
-            method="POST",
-            endpoint=f"api/{self.connection.api_version}/source_definition_specifications/get",
-            headers=self.headers,
-            json={"sourceDefinitionId": source_definition_id},
-        )
+    # def get_source_definition(self, source_definition_id):
+    #     return self.run(
+    #         method="POST",
+    #         endpoint=f"api/{self.connection.api_version}/source_definition_specifications/get",
+    #         headers=self.headers,
+    #         json={"sourceDefinitionId": source_definition_id},
+    #     )
 
     def list_sources_definitions(self, workspace_id):
         response = self.run(
@@ -23,7 +23,7 @@ class SourceDefinitionAPI(AirbyteHook):
 
         if response.status_code == 200:
             source_def = [
-                dataclasses.asdict(SourceDefinition.from_dict(source))
+                SourceDefinition.parse_obj(source).dict()
                 for source in response.json()["sourceDefinitions"]
             ]
             return source_def
@@ -40,7 +40,7 @@ class SourceDefinitionAPI(AirbyteHook):
 
         if response.status_code == 200:
             print(response.json())
-            return SourceDefinition.from_dict(response.json())
+            return SourceDefinition.parse_obj(response.json())
 
 
 class SourcesAPI(AirbyteHook):
@@ -58,7 +58,7 @@ class SourcesAPI(AirbyteHook):
             source_definition_id=source_definition_id
         )
         source_type = source_def.name.lower()
-        params["source_type"] = source_def
+        params["source_type"] = source_def.dict()
         SourceClass = getattr(shared, f"Source{source_type.title()}")
         source = SourceClass(**params)
 

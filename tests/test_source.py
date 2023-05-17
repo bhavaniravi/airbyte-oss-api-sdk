@@ -11,7 +11,6 @@ source_id = "6875991a-f77a-4cd2-a537-18d045c5c52a"
 def test_source_definition(connection):
     hook = SourceDefinitionAPI(connection)
     response = hook.get_source_definition(source_definition_id=source_definition_id)
-    print(response.json())
 
 
 def test_source_schema(connection):

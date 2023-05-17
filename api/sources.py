@@ -64,9 +64,6 @@ class SourcesAPI(AirbyteHook):
         SourceClass = getattr(shared, f"Source{source_type.title()}")
         source = SourceClass(**params)
         params = dataclasses.asdict(source)
-        self.check_source_connection(
-            workspace_id, source_name, source_definition_id, params
-        )
         return self.run(
             method="POST",
             endpoint=f"api/{self.connection.api_version}/sources/create",

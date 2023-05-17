@@ -25,7 +25,6 @@ class AirbyteConnection:
         self.password = password
         self.api_version = api_version
         self.port = 8000
-    
 
 
 class HttpHook:
@@ -89,7 +88,7 @@ class HttpHook:
 
             if conn.port:
                 self.base_url = self.base_url + ":" + str(conn.port)
-            
+
             session.auth = self.auth_type(conn.username, conn.password)
 
         if headers:
@@ -103,7 +102,7 @@ class HttpHook:
         data: dict[str, Any] | str | None = None,
         headers: dict[str, Any] | None = None,
         extra_options: dict[str, Any] | None = None,
-        method : str = "POST",
+        method: str = "POST",
         **request_kwargs: Any,
     ) -> Any:
         r"""
@@ -122,22 +121,28 @@ class HttpHook:
         session = self.get_conn(headers)
 
         url = self.url_from_endpoint(endpoint)
-        print ("url: ", url)
+        print("url: ", url)
 
         if self.tcp_keep_alive:
             keep_alive_adapter = TCPKeepAliveAdapter(
-                idle=self.keep_alive_idle, count=self.keep_alive_count, interval=self.keep_alive_interval
+                idle=self.keep_alive_idle,
+                count=self.keep_alive_count,
+                interval=self.keep_alive_interval,
             )
             session.mount(url, keep_alive_adapter)
         if method == "GET":
             # GET uses params
-            req = requests.Request(method, url, params=data, headers=headers, **request_kwargs)
+            req = requests.Request(
+                method, url, params=data, headers=headers, **request_kwargs
+            )
         elif method == "HEAD":
             # HEAD doesn't use params
             req = requests.Request(method, url, headers=headers, **request_kwargs)
         else:
             # Others use data
-            req = requests.Request(method, url, data=data, headers=headers, **request_kwargs)
+            req = requests.Request(
+                method, url, data=data, headers=headers, **request_kwargs
+            )
 
         prepped_request = session.prepare_request(req)
         logging.info("Sending '%s' to url: %s", method, url)
@@ -203,7 +208,12 @@ class HttpHook:
 
     def url_from_endpoint(self, endpoint: str | None) -> str:
         """Combine base url with endpoint"""
-        if self.base_url and not self.base_url.endswith("/") and endpoint and not endpoint.startswith("/"):
+        if (
+            self.base_url
+            and not self.base_url.endswith("/")
+            and endpoint
+            and not endpoint.startswith("/")
+        ):
             return self.base_url + "/" + endpoint
         return (self.base_url or "") + (endpoint or "")
 
@@ -214,7 +224,6 @@ class HttpHook:
             return True, "Connection successfully tested"
         except Exception as e:
             return False, str(e)
-
 
 
 class AirbyteHook(HttpHook):
@@ -237,9 +246,14 @@ class AirbyteHook(HttpHook):
     def __init__(self, connection) -> None:
         super().__init__()
         self.connection = connection
-        self.headers = {"accept": "application/json", "Authorization": f"Bearer {os.environ.get('AIRBYTE_API_KEY')}"}
+        self.headers = {
+            "accept": "application/json",
+            "Authorization": f"Bearer {os.environ.get('AIRBYTE_API_KEY')}",
+        }
 
-    def wait_for_job(self, job_id: str | int, wait_seconds: float = 3, timeout: float | None = 3600) -> None:
+    def wait_for_job(
+        self, job_id: str | int, wait_seconds: float = 3, timeout: float | None = 3600
+    ) -> None:
         """
         Helper method which polls a job to check if it finishes.
 
@@ -252,13 +266,18 @@ class AirbyteHook(HttpHook):
         start = time.monotonic()
         while True:
             if timeout and start + timeout < time.monotonic():
-                raise Exception(f"Timeout: Airbyte job {job_id} is not ready after {timeout}s")
+                raise Exception(
+                    f"Timeout: Airbyte job {job_id} is not ready after {timeout}s"
+                )
             time.sleep(wait_seconds)
             try:
                 job = self.get_job(job_id=(int(job_id)))
                 state = job.json()["job"]["status"]
             except Exception as err:
-                logging.info("Retrying. Airbyte API returned server error when waiting for job: %s", err)
+                logging.info(
+                    "Retrying. Airbyte API returned server error when waiting for job: %s",
+                    err,
+                )
                 continue
 
             if state in (self.RUNNING, self.PENDING, self.INCOMPLETE):
@@ -270,7 +289,9 @@ class AirbyteHook(HttpHook):
             elif state == self.CANCELLED:
                 raise Exception(f"Job was cancelled:\n{job}")
             else:
-                raise Exception(f"Encountered unexpected state `{state}` for job_id `{job_id}`")
+                raise Exception(
+                    f"Encountered unexpected state `{state}` for job_id `{job_id}`"
+                )
 
     def sync_connection(self, connection_id: str) -> Any:
         """
@@ -283,7 +304,7 @@ class AirbyteHook(HttpHook):
             json={"connectionId": connection_id},
             headers=self.headers,
         )
-        
+
         return response
 
     def get_job(self, job_id: int) -> Any:
@@ -317,15 +338,15 @@ class AirbyteHook(HttpHook):
         :param connection_id: Required. Id of the Airbyte connection
 
         # sample response
-        {'job': {'id': 3, 'configType': 'sync', 'configId': 'c5bc8a5d-c9c4-4399-89f4-1d5dd34ef170', 
-        'enabledStreams': [{'name': 'employee', 'namespace': 'public'}], 
+        {'job': {'id': 3, 'configType': 'sync', 'configId': 'c5bc8a5d-c9c4-4399-89f4-1d5dd34ef170',
+        'enabledStreams': [{'name': 'employee', 'namespace': 'public'}],
         'createdAt': 1683785459, 'updatedAt': 1683785542, 'status': 'succeeded'}}
         """
         return self.run(
             endpoint=f"api/{self.connection.api_version}/jobs/get_last_replication_job",
             headers=self.headers,
             json={"connectionId": connection_id},
-            method="POST"
+            method="POST",
         )
 
     def list_destination_definition(self):
@@ -337,22 +358,20 @@ class AirbyteHook(HttpHook):
             endpoint=f"api/{self.connection.api_version}/v1/destination/list",
             headers=self.headers,
             json={"workspaceId": workspaceId},
-            method="POST"
+            method="POST",
         )
 
-
-    
-
     def test_connection(self):
-        """Tests the Airbyte connection by hitting the health API
-    
-        """
+        """Tests the Airbyte connection by hitting the health API"""
         try:
             res = self.run(
                 endpoint=f"api/{self.connection.api_version}/health",
-                headers={"accept": "application/json", "Content-Type": "application/json;charset=utf-8"},
+                headers={
+                    "accept": "application/json",
+                    "Content-Type": "application/json;charset=utf-8",
+                },
                 extra_options={"check_response": False},
-                method="GET"
+                method="GET",
             )
 
             if res.status_code == 200:

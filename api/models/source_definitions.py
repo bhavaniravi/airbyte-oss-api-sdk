@@ -2,6 +2,20 @@ import dataclasses
 import inspect
 
 
+class SourceDefinitionFactory:
+    def __init__(self):
+        self.source_definitions = {}
+
+    def register(self, source_type, source_definition):
+        self.source_definitions[source_type] = source_definition
+
+    def get(self, source_type):
+        source_definition = self.source_definitions.get(source_type)
+        if not source_definition:
+            raise ValueError(source_type)
+        return source_definition
+
+
 @dataclasses.dataclass
 class BaseDataClass:
     @classmethod
@@ -23,26 +37,13 @@ class SourceDefinition(BaseDataClass):
     protocolVersion: str = None
     releaseStage: str = None
     maxSecondsBetweenMessages: int = None
+    sourceFactory: SourceDefinitionFactory = None
 
     def __post_init__(self):
-        self.source_type = self.dockerRepository.split("/")[-1].split("-")[-1]
+        self.sourceType = self.dockerRepository.split("/")[-1].split("-")[-1]
 
     def __str__(self):
         return f"{self.name} ({self.sourceType})"
 
 
 # create a dict class with mapping sourceType and SourceClass
-
-
-class SourceDefinitionFactory:
-    def __init__(self):
-        self.source_definitions = {}
-
-    def register(self, source_type, source_definition):
-        self.source_definitions[source_type] = source_definition
-
-    def get(self, source_type):
-        source_definition = self.source_definitions.get(source_type)
-        if not source_definition:
-            raise ValueError(source_type)
-        return source_definition

@@ -121,6 +121,7 @@ class SourcesAPI(AirbyteHook):
 
     def get_source(self, source_id):
         # there is a bug in this API, the source_id is returned even after deletion
+        # issue has been raised - https://github.com/airbytehq/airbyte/issues/26182
         return self.run(
             method="POST",
             endpoint=f"api/{self.connection.api_version}/sources/get",

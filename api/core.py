@@ -1,15 +1,21 @@
 # The inspiration is from Apache Airflow's API's hook
+# The SDK is for APIs here
+# https://airbyte-public-api-docs.s3.us-east-2.amazonaws.com/rapidoc-api-docs.html
 
 from __future__ import annotations
 
 import time
 import logging
 from typing import Any, Callable
+import os
 
 import requests
 import json
 from requests.auth import HTTPBasicAuth
 from requests_toolbelt.adapters.socket_options import TCPKeepAliveAdapter
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class AirbyteConnection:
@@ -116,6 +122,7 @@ class HttpHook:
         session = self.get_conn(headers)
 
         url = self.url_from_endpoint(endpoint)
+        print ("url: ", url)
 
         if self.tcp_keep_alive:
             keep_alive_adapter = TCPKeepAliveAdapter(
@@ -146,9 +153,9 @@ class HttpHook:
         try:
             response.raise_for_status()
         except requests.exceptions.HTTPError:
-            logging.error("HTTP error: %s", response.reason)
-            logging.error(response.text)
-            raise Exception(str(response.status_code) + ":" + response.reason)
+            # logging.error("HTTP error: %s", response.reason)
+            logging.error(response.json())
+            # raise Exception(str(response.status_code) + ":" + response.reason)
 
     def run_and_check(
         self,
@@ -230,6 +237,7 @@ class AirbyteHook(HttpHook):
     def __init__(self, connection) -> None:
         super().__init__()
         self.connection = connection
+        self.headers = {"accept": "application/json", "Authorization": f"Bearer {os.environ.get('AIRBYTE_API_KEY')}"}
 
     def wait_for_job(self, job_id: str | int, wait_seconds: float = 3, timeout: float | None = 3600) -> None:
         """
@@ -273,7 +281,7 @@ class AirbyteHook(HttpHook):
         response = self.run(
             endpoint=f"api/{self.connection.api_version}/connections/sync",
             json={"connectionId": connection_id},
-            headers={"accept": "application/json"},
+            headers=self.headers,
         )
         
         return response
@@ -287,7 +295,7 @@ class AirbyteHook(HttpHook):
         return self.run(
             endpoint=f"api/{self.connection.api_version}/jobs/get",
             json={"id": job_id},
-            headers={"accept": "application/json"},
+            headers=self.headers,
         )
 
     def cancel_job(self, job_id: int) -> Any:
@@ -299,7 +307,7 @@ class AirbyteHook(HttpHook):
         return self.run(
             endpoint=f"api/{self.connection.api_version}/jobs/cancel",
             json={"id": job_id},
-            headers={"accept": "application/json"},
+            headers=self.headers,
         )
 
     def get_latest_job(self, connection_id):
@@ -315,21 +323,8 @@ class AirbyteHook(HttpHook):
         """
         return self.run(
             endpoint=f"api/{self.connection.api_version}/jobs/get_last_replication_job",
-            headers={"accept": "application/json"},
+            headers=self.headers,
             json={"connectionId": connection_id},
-            method="POST"
-        )
-
-    def list_source_definition(self):
-        """Get list of source definitions
-
-        Used to get definition id for creating source config
-        """
-
-        return self.run(
-            endpoint=f"api/{self.connection.api_version}/v1/sources/list",
-            headers={"accept": "application/json"},
-            json={"workspaceId": workspaceId},
             method="POST"
         )
 
@@ -340,16 +335,11 @@ class AirbyteHook(HttpHook):
         """
         return self.run(
             endpoint=f"api/{self.connection.api_version}/v1/destination/list",
-            headers={"accept": "application/json"},
+            headers=self.headers,
             json={"workspaceId": workspaceId},
             method="POST"
         )
 
-    def create_source(self):
-        pass
-
-    def create_destination(self):
-        pass
 
     
 

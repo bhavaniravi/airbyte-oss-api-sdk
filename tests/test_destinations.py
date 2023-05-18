@@ -9,7 +9,6 @@ destination_id = "2d51cc69-400c-4c65-9409-b52def56235f"
 # def test_list_destination_definitions(connection):
 #     hook = DestinationDefinitionAPI(connection)
 #     response = hook.list_destination_definitions(workspace_id=workspace_id)
-#     print(response)
 
 
 def test_destination_definition(connection):
@@ -17,7 +16,6 @@ def test_destination_definition(connection):
     response = hook.get_destination_definition(
         workspace_id=workspace_id, destination_definition_id=destination_definition_id
     )
-    print(response)
 
 
 def test_create_destination(connection):
@@ -40,7 +38,6 @@ def test_create_destination(connection):
             "jdbc_url_params": "",
         },
     )
-    print(response.json())
 
 
 # def test_get_destination(connection):

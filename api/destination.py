@@ -78,14 +78,12 @@ class DestinationAPI(AirbyteHook):
         )
 
     def delete_destination(self, destination_id):
-        response = self.run(
+        return self.run(
             method="POST",
             endpoint=f"api/{self.connection.api_version}/destinations/delete",
             headers=self.headers,
             json={"destinationId": destination_id},
         )
-        print(response.text)
-        return response
 
     def list_destinations(self, workspace_id):
         response = self.run(

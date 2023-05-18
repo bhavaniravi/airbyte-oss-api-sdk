@@ -5,7 +5,7 @@ import json
 
 def test_create_source(connection):
     hook = ConnectionsAPI(connection)
-    with open("tests/data/connection/create_connection.json") as f:
+    with open("tests/data/connection/connection_postgres_postgres.json") as f:
         params = json.load(f)
         response = hook.create_connection(params)
 

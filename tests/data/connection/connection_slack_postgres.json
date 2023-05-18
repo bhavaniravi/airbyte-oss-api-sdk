@@ -1,0 +1,991 @@
+{
+  "sourceId": "e44e07cc-408b-448a-b21e-3bba16a0f986",
+  "destinationId": "c18f9e51-5545-44d7-a4b2-57cd6b52d4e8",
+  "syncCatalog": {
+    "streams": [
+      {
+        "config": {
+          "syncMode": "full_refresh",
+          "cursorField": [
+            
+          ],
+          "destinationSyncMode": "overwrite",
+          "primaryKey": [
+            [
+              "id"
+            ]
+          ],
+          "aliasName": "channels",
+          "selected": true,
+          "suggested": true
+        },
+        "stream": {
+          "name": "channels",
+          "jsonSchema": {
+            "additional_properties": true,
+            "type": "object",
+            "properties": {
+              "is_private": {
+                "type": "boolean"
+              },
+              "purpose": {
+                "additionalProperties": true,
+                "type": "object",
+                "properties": {
+                  "last_set": {
+                    "type": "integer"
+                  },
+                  "creator": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              },
+              "is_pending_ext_shared": {
+                "type": "boolean"
+              },
+              "locale": {
+                "type": "string"
+              },
+              "pending_shared": {
+                "type": "array",
+                "items": {
+                  
+                }
+              },
+              "is_channel": {
+                "type": "boolean"
+              },
+              "is_shared": {
+                "type": "boolean"
+              },
+              "is_read_only": {
+                "type": "boolean"
+              },
+              "id": {
+                "type": "string"
+              },
+              "previous_names": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "last_read": {
+                "type": "string"
+              },
+              "creator": {
+                "type": "string"
+              },
+              "is_im": {
+                "type": "boolean"
+              },
+              "is_member": {
+                "type": "boolean"
+              },
+              "is_mpim": {
+                "type": "boolean"
+              },
+              "created": {
+                "type": "integer"
+              },
+              "is_ext_shared": {
+                "type": "boolean"
+              },
+              "name_normalized": {
+                "type": "string"
+              },
+              "is_group": {
+                "type": "boolean"
+              },
+              "unlinked": {
+                "type": "integer"
+              },
+              "is_archived": {
+                "type": "boolean"
+              },
+              "is_general": {
+                "type": "boolean"
+              },
+              "num_members": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "topic": {
+                "additionalProperties": true,
+                "type": "object",
+                "properties": {
+                  "last_set": {
+                    "type": "integer"
+                  },
+                  "creator": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              },
+              "is_org_shared": {
+                "type": "boolean"
+              }
+            }
+          },
+          "supportedSyncModes": [
+            "full_refresh"
+          ],
+          "defaultCursorField": [
+            
+          ],
+          "sourceDefinedPrimaryKey": [
+            [
+              "id"
+            ]
+          ]
+        }
+      },
+      {
+        "config": {
+          "syncMode": "full_refresh",
+          "cursorField": [
+            
+          ],
+          "destinationSyncMode": "overwrite",
+          "primaryKey": [
+            [
+              "member_id"
+            ],
+            [
+              "channel_id"
+            ]
+          ],
+          "aliasName": "channel_members",
+          "selected": false,
+          "suggested": true
+        },
+        "stream": {
+          "name": "channel_members",
+          "jsonSchema": {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "member_id": {
+                "type": "string"
+              },
+              "channel_id": {
+                "type": "string"
+              }
+            }
+          },
+          "supportedSyncModes": [
+            "full_refresh"
+          ],
+          "defaultCursorField": [
+            
+          ],
+          "sourceDefinedPrimaryKey": [
+            [
+              "member_id"
+            ],
+            [
+              "channel_id"
+            ]
+          ]
+        }
+      },
+      {
+        "config": {
+          "syncMode": "incremental",
+          "cursorField": [
+            "float_ts"
+          ],
+          "destinationSyncMode": "append_dedup",
+          "primaryKey": [
+            [
+              "channel_id"
+            ],
+            [
+              "ts"
+            ]
+          ],
+          "aliasName": "channel_messages",
+          "selected": false,
+          "suggested": true
+        },
+        "stream": {
+          "name": "channel_messages",
+          "jsonSchema": {
+            "additionalProperties": true,
+            "type": [
+              "null",
+              "object"
+            ],
+            "properties": {
+              "attachments": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": [
+                    "null",
+                    "object"
+                  ],
+                  "properties": {
+                    "color": {
+                      "type": [
+                        "null",
+                        "string"
+                      ]
+                    },
+                    "id": {
+                      "type": [
+                        "null",
+                        "integer"
+                      ]
+                    },
+                    "title": {
+                      "type": [
+                        "null",
+                        "string"
+                      ]
+                    },
+                    "fallback": {
+                      "type": [
+                        "null",
+                        "string"
+                      ]
+                    }
+                  }
+                }
+              },
+              "client_msg_id": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "upload": {
+                "type": [
+                  "null",
+                  "boolean"
+                ]
+              },
+              "purpose": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "is_intro": {
+                "type": [
+                  "null",
+                  "boolean"
+                ]
+              },
+              "type": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "float_ts": {
+                "type": [
+                  "null",
+                  "number"
+                ]
+              },
+              "is_delayed_message": {
+                "type": [
+                  "null",
+                  "boolean"
+                ]
+              },
+              "subscribed": {
+                "type": [
+                  "null",
+                  "boolean"
+                ]
+              },
+              "unread_count": {
+                "type": [
+                  "null",
+                  "integer"
+                ]
+              },
+              "subtype": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "reply_users_count": {
+                "type": [
+                  "null",
+                  "integer"
+                ]
+              },
+              "file_ids": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                }
+              },
+              "inviter": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "text": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "display_as_bot": {
+                "type": [
+                  "null",
+                  "boolean"
+                ]
+              },
+              "bot_id": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "latest_reply": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "last_read": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "parent_user_id": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "blocks": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "additionalProperties": true,
+                  "type": [
+                    "null",
+                    "object"
+                  ],
+                  "properties": {
+                    "type": {
+                      "type": [
+                        "null",
+                        "string"
+                      ]
+                    }
+                  }
+                }
+              },
+              "reply_users": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                }
+              },
+              "team": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "icons": {
+                "additionalProperties": true,
+                "type": [
+                  "null",
+                  "object"
+                ],
+                "properties": {
+                  "emoji": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  }
+                }
+              },
+              "reply_count": {
+                "type": [
+                  "null",
+                  "integer"
+                ]
+              },
+              "user_team": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "pinned_to": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                }
+              },
+              "is_starred": {
+                "type": [
+                  "null",
+                  "boolean"
+                ]
+              },
+              "old_name": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "bot_profile": {
+                "additionalProperties": true,
+                "type": [
+                  "null",
+                  "object"
+                ],
+                "properties": {
+                  "deleted": {
+                    "type": [
+                      "null",
+                      "boolean"
+                    ]
+                  },
+                  "name": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "id": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "team_id": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "app_id": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "updated": {
+                    "type": [
+                      "null",
+                      "integer"
+                    ]
+                  }
+                }
+              },
+              "source_team": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "thread_ts": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "file_id": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "name": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "topic": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "reactions": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "additionalProperties": true,
+                  "type": [
+                    "null",
+                    "object"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": [
+                        "null",
+                        "string"
+                      ]
+                    },
+                    "count": {
+                      "type": [
+                        "null",
+                        "integer"
+                      ]
+                    },
+                    "users": {
+                      "type": [
+                        "null",
+                        "array"
+                      ],
+                      "items": {
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "permalink": {
+                "format": "uri",
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "user": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "channel_id": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "ts": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "username": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              }
+            }
+          },
+          "supportedSyncModes": [
+            "full_refresh",
+            "incremental"
+          ],
+          "sourceDefinedCursor": true,
+          "defaultCursorField": [
+            "float_ts"
+          ],
+          "sourceDefinedPrimaryKey": [
+            [
+              "channel_id"
+            ],
+            [
+              "ts"
+            ]
+          ]
+        }
+      },
+      {
+        "config": {
+          "syncMode": "incremental",
+          "cursorField": [
+            "float_ts"
+          ],
+          "destinationSyncMode": "append_dedup",
+          "primaryKey": [
+            [
+              "channel_id"
+            ],
+            [
+              "ts"
+            ]
+          ],
+          "aliasName": "threads",
+          "selected": false,
+          "suggested": true
+        },
+        "stream": {
+          "name": "threads",
+          "jsonSchema": {
+            "additionalProperties": true,
+            "type": [
+              "null",
+              "object"
+            ],
+            "properties": {
+              "client_msg_id": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "blocks": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "additionalProperties": true,
+                  "type": [
+                    "null",
+                    "object"
+                  ],
+                  "properties": {
+                    "type": {
+                      "type": [
+                        "null",
+                        "string"
+                      ]
+                    }
+                  }
+                }
+              },
+              "reply_users": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "string"
+                }
+              },
+              "team": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "type": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "reply_count": {
+                "type": [
+                  "null",
+                  "integer"
+                ]
+              },
+              "float_ts": {
+                "type": [
+                  "null",
+                  "number"
+                ]
+              },
+              "subscribed": {
+                "type": [
+                  "null",
+                  "boolean"
+                ]
+              },
+              "thread_ts": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "reply_users_count": {
+                "type": [
+                  "null",
+                  "number"
+                ]
+              },
+              "text": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "user": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "channel_id": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "ts": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "latest_reply": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              }
+            }
+          },
+          "supportedSyncModes": [
+            "full_refresh",
+            "incremental"
+          ],
+          "sourceDefinedCursor": true,
+          "defaultCursorField": [
+            "float_ts"
+          ],
+          "sourceDefinedPrimaryKey": [
+            [
+              "channel_id"
+            ],
+            [
+              "ts"
+            ]
+          ]
+        }
+      },
+      {
+        "config": {
+          "syncMode": "full_refresh",
+          "cursorField": [
+            
+          ],
+          "destinationSyncMode": "overwrite",
+          "primaryKey": [
+            [
+              "id"
+            ]
+          ],
+          "aliasName": "users",
+          "selected": true,
+          "suggested": true
+        },
+        "stream": {
+          "name": "users",
+          "jsonSchema": {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+              "is_ultra_restricted": {
+                "type": "boolean"
+              },
+              "color": {
+                "type": "string"
+              },
+              "tz": {
+                "type": "string"
+              },
+              "has_2fa": {
+                "type": "boolean"
+              },
+              "is_owner": {
+                "type": "boolean"
+              },
+              "is_restricted": {
+                "type": "boolean"
+              },
+              "profile": {
+                "additionalProperties": true,
+                "type": "object",
+                "properties": {
+                  "image_32": {
+                    "type": "string"
+                  },
+                  "status_emoji": {
+                    "type": "string"
+                  },
+                  "image_1024": {
+                    "type": "string"
+                  },
+                  "image_24": {
+                    "type": "string"
+                  },
+                  "last_name": {
+                    "type": "string"
+                  },
+                  "image_192": {
+                    "type": "string"
+                  },
+                  "real_name": {
+                    "type": "string"
+                  },
+                  "team": {
+                    "type": "string"
+                  },
+                  "image_48": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "display_name": {
+                    "type": "string"
+                  },
+                  "skype": {
+                    "type": "string"
+                  },
+                  "image_original": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "real_name_normalized": {
+                    "type": "string"
+                  },
+                  "status_text": {
+                    "type": "string"
+                  },
+                  "image_72": {
+                    "type": "string"
+                  },
+                  "avatar_hash": {
+                    "type": "string"
+                  },
+                  "first_name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "image_512": {
+                    "type": "string"
+                  },
+                  "display_name_normalized": {
+                    "type": "string"
+                  }
+                }
+              },
+              "tz_label": {
+                "type": "string"
+              },
+              "is_primary_owner": {
+                "type": "boolean"
+              },
+              "real_name": {
+                "type": "string"
+              },
+              "team_id": {
+                "type": "string"
+              },
+              "is_admin": {
+                "type": "boolean"
+              },
+              "is_app_user": {
+                "type": "boolean"
+              },
+              "deleted": {
+                "type": "boolean"
+              },
+              "tz_offset": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "is_bot": {
+                "type": "boolean"
+              },
+              "updated": {
+                "type": "integer"
+              }
+            }
+          },
+          "supportedSyncModes": [
+            "full_refresh"
+          ],
+          "defaultCursorField": [
+            
+          ],
+          "sourceDefinedPrimaryKey": [
+            [
+              "id"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  "prefix": "",
+  "namespaceDefinition": "destination",
+  "namespaceFormat": "${SOURCE_NAMESPACE}",
+  "nonBreakingChangesPreference": "ignore",
+  "scheduleType": "basic",
+  "scheduleData": {
+    "basicSchedule": {
+      "units": 24,
+      "timeUnit": "hours"
+    }
+  },
+  "geography": "auto",
+  "name": "Slack <> Postgres",
+  "operations": [
+    {
+      "name": "Normalization",
+      "workspaceId": "2d51cc69-400c-4c65-9409-b52def56235f",
+      "operatorConfiguration": {
+        "operatorType": "normalization",
+        "normalization": {
+          "option": "basic"
+        }
+      }
+    }
+  ],
+  "status": "active",
+  "sourceCatalogId": "b1a69b75-654b-4998-beec-0b87c4c13517"
+}

@@ -20,6 +20,12 @@ def test_list_source_definitions(connection):
     hook = SourceDefinitionAPI(connection)
     response = hook.list_sources_definitions(workspace_id=workspace_id)
 
+# get the list
+# filter by name = hubspot
+# schema of request params
+# use schema to construct request
+# pass it to create_source
+
 
 def test_create_source(connection):
     hook = SourcesAPI(connection)

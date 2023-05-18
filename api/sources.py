@@ -12,7 +12,7 @@ class SourceDefinitionAPI(AirbyteHook):
             method="POST",
             endpoint=f"api/{self.connection.api_version}/source_definitions/get_for_workspace",
             headers=self.headers,
-            json={
+            json={x
                 "sourceDefinitionId": source_definition_id,
                 "workspaceId": workspace_id,
             },

@@ -1,0 +1,163 @@
+{
+  "sourceId": "efa6dac7-f1f7-476c-b3a2-4b833f90918a",
+  "destinationId": "c18f9e51-5545-44d7-a4b2-57cd6b52d4e8",
+  "syncCatalog": {
+    "streams": [
+      {
+        "config": {
+          "syncMode": "incremental",
+          "cursorField": [
+            "_airbyte_emitted_at"
+          ],
+          "destinationSyncMode": "append",
+          "primaryKey": [
+            [
+              "_airbyte_ab_id"
+            ]
+          ],
+          "aliasName": "_airbyte_raw_employee",
+          "selected": false,
+          "suggested": true
+        },
+        "stream": {
+          "name": "_airbyte_raw_employee",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "_airbyte_data": {
+                "type": "string"
+              },
+              "_airbyte_ab_id": {
+                "type": "string"
+              },
+              "_airbyte_emitted_at": {
+                "format": "date-time",
+                "airbyte_type": "timestamp_with_timezone",
+                "type": "string"
+              }
+            }
+          },
+          "supportedSyncModes": [
+            "full_refresh",
+            "incremental"
+          ],
+          "defaultCursorField": [
+            
+          ],
+          "sourceDefinedPrimaryKey": [
+            [
+              "_airbyte_ab_id"
+            ]
+          ],
+          "namespace": "public"
+        }
+      },
+      {
+        "config": {
+          "syncMode": "incremental",
+          "cursorField": [
+            "_airbyte_emitted_at"
+          ],
+          "destinationSyncMode": "append_dedup",
+          "primaryKey": [
+            [
+              "email"
+            ],
+            [
+              "emp_id"
+            ]
+          ],
+          "aliasName": "employee",
+          "selected": true,
+          "suggested": true
+        },
+        "stream": {
+          "name": "employee",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "_airbyte_ab_id": {
+                "type": "string"
+              },
+              "birthdate": {
+                "format": "date",
+                "type": "string"
+              },
+              "gender": {
+                "type": "string"
+              },
+              "_airbyte_normalized_at": {
+                "format": "date-time",
+                "airbyte_type": "timestamp_with_timezone",
+                "type": "string"
+              },
+              "last_name": {
+                "type": "string"
+              },
+              "salary": {
+                "airbyte_type": "integer",
+                "type": "number"
+              },
+              "_airbyte_employee_hashid": {
+                "type": "string"
+              },
+              "first_name": {
+                "type": "string"
+              },
+              "_airbyte_emitted_at": {
+                "format": "date-time",
+                "airbyte_type": "timestamp_with_timezone",
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "emp_id": {
+                "airbyte_type": "integer",
+                "type": "number"
+              }
+            }
+          },
+          "supportedSyncModes": [
+            "full_refresh",
+            "incremental"
+          ],
+          "defaultCursorField": [
+            
+          ],
+          "sourceDefinedPrimaryKey": [
+            
+          ],
+          "namespace": "public"
+        }
+      }
+    ]
+  },
+  "prefix": "",
+  "namespaceDefinition": "destination",
+  "namespaceFormat": "${SOURCE_NAMESPACE}",
+  "nonBreakingChangesPreference": "ignore",
+  "scheduleType": "basic",
+  "scheduleData": {
+    "basicSchedule": {
+      "units": 24,
+      "timeUnit": "hours"
+    }
+  },
+  "geography": "auto",
+  "name": "new_pg <> Postgres",
+  "operations": [
+    {
+      "name": "Normalization",
+      "workspaceId": "2d51cc69-400c-4c65-9409-b52def56235f",
+      "operatorConfiguration": {
+        "operatorType": "normalization",
+        "normalization": {
+          "option": "basic"
+        }
+      }
+    }
+  ],
+  "status": "active",
+  "sourceCatalogId": "2d6de91c-1a26-4639-a733-83ce6ef30ab9"
+}

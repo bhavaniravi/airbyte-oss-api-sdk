@@ -60,7 +60,7 @@ class SourcesAPI(AirbyteHook):
             source_definition_id=source_definition_id
         )
         source_type = source_def.name.lower()
-        params["source_type"] = source_def
+        params["source_type"] = source_type
         SourceClass = getattr(shared, f"Source{source_type.title()}")
         source = SourceClass(**params)
         params = dataclasses.asdict(source)

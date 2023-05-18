@@ -19,12 +19,15 @@ load_dotenv()
 
 
 class AirbyteConnection:
-    def __init__(self, host, username, password, api_version="v1", port=8000):
+    def __init__(
+        self, host, username, password, api_version="v1", port=8000, token=None
+    ):
         self.host = host
         self.username = username
         self.password = password
         self.api_version = api_version
         self.port = 8000
+        self.token = token
 
 
 class HttpHook:
@@ -248,8 +251,9 @@ class AirbyteHook(HttpHook):
         self.connection = connection
         self.headers = {
             "accept": "application/json",
-            "Authorization": f"Bearer {os.environ.get('AIRBYTE_API_KEY')}",
         }
+        if self.connection.token:
+            self.headers["Authorization"] = f"Bearer {self.connection.token}"
 
     def wait_for_job(
         self, job_id: str | int, wait_seconds: float = 3, timeout: float | None = 3600

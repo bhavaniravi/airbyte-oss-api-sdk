@@ -7,4 +7,9 @@ load_dotenv()
 
 @pytest.fixture(scope="module")
 def connection():
-    return AirbyteConnection("http://localhost", "airbyte", "password", port=8000)
+    host = os.env["AIRBYTE_HOST"]
+    username = os.env["AIRBYTE_USERNAME"]
+    password = os.env["AIRBYTE_PASSWORD"]
+    port = os.env["port"]
+    token = os.getenv("AIRBYTE_API_KEY")
+    return AirbyteConnection(host, username, password, port=port, token=token)

@@ -12,6 +12,7 @@ airbyte-api = "^0.6.0"
 requests-toolbelt = "^1.0.0"
 python-dotenv = "^1.0.0"
 black = "22.12.0"
+pydantic = "^1.10.7"
 
 
 [tool.poetry.group.dev.dependencies]

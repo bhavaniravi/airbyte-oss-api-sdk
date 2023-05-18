@@ -2,8 +2,6 @@ from api.sources import SourcesAPI, SourceDefinitionAPI
 import pytest
 
 workspace_id = "2d51cc69-400c-4c65-9409-b52def56235f"
-# connection_id = "c5bc8a5d-c9c4-4399-89f4-1d5dd34ef170"
-# source_id = "cc9f8665-7953-451f-8679-289ac5b9aefa"
 source_definition_id = "decd338e-5647-4c0b-adf4-da0e75f5a750"  # for postgres
 source_id = "6875991a-f77a-4cd2-a537-18d045c5c52a"
 
@@ -51,8 +49,10 @@ def test_get_source(connection):
     # there is a bug in this API, the data is returned even after deletion
     hook = SourcesAPI(connection)
     response = hook.get_source(source_id=source_id)
+    assert response.source_response.source_id is not None
 
 
 def test_delete_source(connection):
     hook = SourcesAPI(connection)
     response = hook.delete_source(source_id=source_id)
+    assert response.status_code == 204

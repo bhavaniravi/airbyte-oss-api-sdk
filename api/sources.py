@@ -1,6 +1,8 @@
 from api.core import AirbyteHook
-from api.models.sources import SourceDefinition
-from airbyte.models import shared
+from api.models import sources
+from airbyte.models import shared, operations
+from airbyte.utils import utils
+from typing import Optional
 import dataclasses
 
 
@@ -26,14 +28,14 @@ class SourceDefinitionAPI(AirbyteHook):
 
         if response.status_code == 200:
             source_def = [
-                dataclasses.asdict(SourceDefinition.from_dict(source))
+                dataclasses.asdict(sources.SourceDefinition.from_dict(source))
                 for source in response.json()["sourceDefinitions"]
             ]
             return source_def
         else:
             return response
 
-    def get_source_definition(self, source_definition_id) -> SourceDefinition:
+    def get_source_definition(self, source_definition_id) -> sources.SourceDefinition:
         response = self.run(
             method="POST",
             endpoint=f"api/{self.connection.api_version}/source_definitions/get",
@@ -42,7 +44,7 @@ class SourceDefinitionAPI(AirbyteHook):
         )
 
         if response.status_code == 200:
-            return SourceDefinition.from_dict(response.json())
+            return sources.SourceDefinition.from_dict(response.json())
 
 
 class SourcesAPI(AirbyteHook):
@@ -54,7 +56,9 @@ class SourcesAPI(AirbyteHook):
             json={"sourceId": source_id, "connectionId": connection_id},
         )
 
-    def create_source(self, workspace_id, source_name, source_definition_id, params):
+    def create_source(
+        self, workspace_id, source_name, source_definition_id, params
+    ) -> operations.CreateSourceResponse:
         source_def = SourceDefinitionAPI(self.connection)
         source_def = source_def.get_source_definition(
             source_definition_id=source_definition_id
@@ -64,7 +68,7 @@ class SourcesAPI(AirbyteHook):
         SourceClass = getattr(shared, f"Source{source_type.title()}")
         source = SourceClass(**params)
         params = dataclasses.asdict(source)
-        return self.run(
+        http_res = self.run(
             method="POST",
             endpoint=f"api/{self.connection.api_version}/sources/create",
             headers=self.headers,
@@ -75,16 +79,44 @@ class SourcesAPI(AirbyteHook):
                 "connectionConfiguration": params,
             },
         )
+        content_type = http_res.headers.get("Content-Type")
 
-    def get_source(self, source_id):
+        res = operations.CreateSourceResponse(
+            status_code=http_res.status_code,
+            content_type=content_type,
+            raw_response=http_res,
+        )
+
+        if http_res.status_code == 200:
+            if utils.match_content_type(content_type, "application/json"):
+                out = sources.SourceResponse.from_dict(http_res.json())
+                res.source_response = out
+
+        return res
+
+    def get_source(self, source_id) -> operations.GetSourceResponse:
         # there is a bug in this API, the source_id is returned even after deletion
         # issue has been raised - https://github.com/airbytehq/airbyte/issues/26182
-        return self.run(
+        http_res = self.run(
             method="POST",
             endpoint=f"api/{self.connection.api_version}/sources/get",
             headers=self.headers,
             json={"sourceId": source_id},
         )
+
+        content_type = http_res.headers.get("Content-Type")
+
+        res = operations.GetSourceResponse(
+            status_code=http_res.status_code,
+            content_type=content_type,
+            raw_response=http_res,
+        )
+
+        if http_res.status_code == 200:
+            if utils.match_content_type(content_type, "application/json"):
+                res.source_response = sources.SourceResponse.from_dict(http_res.json())
+
+        return res
 
     def delete_source(self, source_id):
         response = self.run(
@@ -93,5 +125,4 @@ class SourcesAPI(AirbyteHook):
             headers=self.headers,
             json={"sourceId": source_id},
         )
-        print(response.text)
         return response

@@ -29,7 +29,6 @@ def create_connection():
 
 
 def test_create_sync():
-    print("hello...")
     hook = AirbyteHook(connection)
     response = hook.sync_connection(connection_id=connection_id)
     if response.status_code == 200:

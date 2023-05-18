@@ -16,7 +16,6 @@ def test_source_definition(connection):
 def test_source_schema(connection):
     hook = SourcesAPI(connection)
     response = hook.get_source_schema(source_id=source_id)
-    print(response.json())
 
 
 def test_list_source_definitions(connection):
@@ -44,6 +43,8 @@ def test_create_source(connection):
             "jdbc_url_params": "",
         },
     )
+
+    assert response.source_response.source_id is not None
 
 
 def test_get_source(connection):

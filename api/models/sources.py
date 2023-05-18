@@ -1,6 +1,10 @@
 import dataclasses
 import inspect
+from typing import Optional
 from api.models.base import BaseDataClass
+from airbyte.utils import utils
+from airbyte.models import shared
+from dataclasses_json import Undefined, dataclass_json
 
 
 class SourceDefinitionFactory:
@@ -19,22 +23,77 @@ class SourceDefinitionFactory:
 
 @dataclasses.dataclass
 class SourceDefinition(BaseDataClass):
-    name: str
-    dockerRepository: str
-    dockerImageTag: str
-    documentationUrl: str
-    sourceDefinitionId: str
-    sourceType: str = None
-    protocolVersion: str = None
-    releaseStage: str = None
-    maxSecondsBetweenMessages: int = None
-    sourceFactory: SourceDefinitionFactory = None
+    name: str = dataclasses.field(
+        metadata={"dataclasses_json": {"letter_case": utils.get_field_name("name")}}
+    )
+    docker_repository: str = dataclasses.field(
+        metadata={
+            "dataclasses_json": {
+                "letter_case": utils.get_field_name("dockerRepository")
+            }
+        }
+    )
+    docker_image_tag: str = dataclasses.field(
+        metadata={
+            "dataclasses_json": {"letter_case": utils.get_field_name("dockerImageTag")}
+        }
+    )
+    documentation_url: str = dataclasses.field(
+        metadata={
+            "dataclasses_json": {
+                "letter_case": utils.get_field_name("documentationUrl")
+            }
+        }
+    )
+    source_def_id: str = dataclasses.field(
+        metadata={
+            "dataclasses_json": {
+                "letter_case": utils.get_field_name("sourceDefinitionId")
+            }
+        }
+    )
+    source_type: Optional[str] = dataclasses.field(
+        default=None,
+        metadata={
+            "dataclasses_json": {"letter_case": utils.get_field_name("sourceType")}
+        },
+    )
+    protocol_version: Optional[str] = dataclasses.field(
+        default=None,
+        metadata={
+            "dataclasses_json": {"letter_case": utils.get_field_name("protocolVersion")}
+        },
+    )
+    release_stage: Optional[str] = dataclasses.field(
+        default=None,
+        metadata={
+            "dataclasses_json": {"letter_case": utils.get_field_name("releaseStage")}
+        },
+    )
+
+    max_seconds_between_messages: Optional[int] = dataclasses.field(
+        default=None,
+        metadata={
+            "dataclasses_json": {
+                "letter_case": utils.get_field_name("maxSecondsBetweenMessages")
+            }
+        },
+    )
 
     def __post_init__(self):
-        self.sourceType = self.dockerRepository.split("/")[-1].split("-")[-1]
+        self.sourceType = self.docker_repository.split("/")[-1].split("-")[-1]
 
     def __str__(self):
         return f"{self.name} ({self.sourceType})"
 
 
-# create a dict class with mapping sourceType and SourceClass
+@dataclass_json(undefined=Undefined.EXCLUDE)
+@dataclasses.dataclass(kw_only=True)
+class SourceResponse(shared.SourceResponse):
+    source_type: Optional[str] = dataclasses.field(
+        default=None,
+        metadata={
+            "dataclasses_json": {"letter_case": utils.get_field_name("sourceType")}
+        },
+        init=False,
+    )
